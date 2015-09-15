@@ -1,4 +1,4 @@
-@echo off
+REM @echo off
 set command=%1
 set curPath=%~dp0
 IF "%command%"=="sync" (
