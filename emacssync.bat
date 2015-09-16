@@ -12,7 +12,7 @@ IF "%command%"=="sync" (
 	xcopy "%curPath%..\elpa" "%curPath%/elpa" /S /I
 	call git add .emacs
 	call git add emacssync.bat
-	call git add elpa\*
+	call git add -A elpa\*
 	call git status
 	call git commit -m "Updating Emacs enviroment"
 	call git push origin master
