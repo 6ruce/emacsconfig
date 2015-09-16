@@ -18,9 +18,9 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(column-number-mode t)
- '(custom-enabled-themes (quote (wombat)))
+ '(custom-enabled-themes (quote (misterioso)))
  '(display-time-mode t)
- '(fringe-mode (quote (nil . 0)) nil (fringe))
+ '(fringe-mode (quote (0)) nil (fringe))
  '(package-selected-packages
    (quote
     (ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
@@ -41,8 +41,15 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
 
-(require 'evil)
-(evil-mode 1)
-
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
+;; _____________________________
+;; Relative number configuration
+(global-linum-mode)
+(require 'linum-relative)
+
+;; _______________________
+;; Evil Mode Configuration
+(require 'evil)
+(evil-mode 1)
