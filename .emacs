@@ -46,6 +46,11 @@
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
+;; __________________
+;; Ace Jump Configuration
+(require 'ace-jump-mode)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
 ;; _____________________________
 ;; Relative number configuration
 (global-linum-mode)
