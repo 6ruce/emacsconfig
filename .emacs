@@ -36,6 +36,8 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Literation Mono Powerline" :foundry "outline" :slant normal :weight normal :height 113 :width normal)))))
 
+;; __________________
+;; Helm Configuration
 (require 'helm)
 (helm-mode 1)
 (global-set-key (kbd "M-x") 'helm-M-x)
