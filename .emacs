@@ -60,7 +60,10 @@
 ;; _______________________
 ;; Evil Mode Configuration
 (require 'evil)
-(evil-mode 1)
+(evil-mode t)
+
+(require 'evil-surround)
+(global-evil-surround-mode 1)
 
 (require 'powerline)
 (powerline-center-theme)
