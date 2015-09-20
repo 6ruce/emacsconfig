@@ -7,7 +7,7 @@
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")
                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                        ("melpa-stable" . "http://marmalade-repo.org/packages/")
                          ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")))
 (package-initialize)
 
@@ -24,8 +24,9 @@
  '(fringe-mode (quote (0)) nil (fringe))
  '(package-selected-packages
    (quote
-    (ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
+    (magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
  '(save-place t nil (saveplace))
+ '(save-place-mode t nil (saveplace))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(size-indication-mode t)
@@ -37,12 +38,18 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "Literation Mono Powerline" :foundry "outline" :slant normal :weight normal :height 113 :width normal)))))
 
+;; ___________________
+;; Magit Configuration
+(require 'magit)
+(global-set-key (kbd "C-x g") 'magit-status)
+
 ;; __________________
 ;; Helm Configuration
 (require 'helm)
 (helm-mode 1)
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
+(helm-autoresize-mode 1)
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -57,14 +64,16 @@
 (global-linum-mode)
 (require 'linum-relative)
 
+;; Customizations
+(setq evil-emacs-state-cursor '("red" box))
+(setq evil-normal-state-cursor '("green" box))
+(setq evil-visual-state-cursor '("orange" box))
+(setq evil-insert-state-cursor '("red" bar))
+(setq evil-replace-state-cursor '("red" bar))
+(setq evil-operator-state-cursor '("red" hollow))
+
 ;; _______________________
 ;; Evil Mode Configuration
 (require 'evil)
 (evil-mode 1)
 
-(require 'powerline)
-(powerline-center-theme)
-(display-time-mode t)
-
-;; ___________________
-;; Custom Key Bindings
