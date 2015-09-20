@@ -24,8 +24,7 @@
  '(fringe-mode (quote (0)) nil (fringe))
  '(package-selected-packages
    (quote
-    (magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
- '(save-place t nil (saveplace))
+    (ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
  '(save-place-mode t nil (saveplace))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -64,6 +63,14 @@
 (global-linum-mode)
 (require 'linum-relative)
 
+;; _____________
+;; Markdown Mode
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
 ;; Customizations
 (setq evil-emacs-state-cursor '("red" box))
 (setq evil-normal-state-cursor '("green" box))
@@ -71,7 +78,8 @@
 (setq evil-insert-state-cursor '("red" bar))
 (setq evil-replace-state-cursor '("red" bar))
 (setq evil-operator-state-cursor '("red" hollow))
-
+(when (fboundp 'winner-mode)
+      (winner-mode 1))
 ;; _______________________
 ;; Evil Mode Configuration
 (require 'evil)
@@ -80,3 +88,5 @@
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
+(require 'powerline)
+(powerline-center-theme)
