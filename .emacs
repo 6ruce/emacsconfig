@@ -53,10 +53,14 @@
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
+(require 'powerline)
+(powerline-center-theme)
+
 ;; __________________
-;; Ace Jump Configuration
-(require 'ace-jump-mode)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+;; Avy Jump Configuration
+(require 'ace-window)
+(require 'avy)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 
 ;; _____________________________
 ;; Relative number configuration
@@ -88,5 +92,34 @@
 (require 'evil-surround)
 (global-evil-surround-mode 1)
 
-(require 'powerline)
-(powerline-center-theme)
+(require 'evil-leader)
+(setq evil-leader/no-prefix-mode-rx '("magit-.*-mode" "gnus-.*-mode"))
+(global-evil-leader-mode)
+(evil-leader/set-leader ",") 
+(evil-leader/set-key
+  ;; General
+  "q" 'evil-quit
+  
+  ;; Window bindings
+  "wv" 'evil-window-vsplit
+  "ws" 'evil-window-split
+  "wq" 'delete-window
+
+  ;; Motions
+  "j" 'evil-first-non-blank
+  "k" 'evil-last-non-blank
+  
+  ;; Avy bindings
+  "af" 'ace-window
+  "aw" 'avy-goto-word-1
+  "al" 'avy-goto-line
+
+  ;;Magit bindings
+  "gs" 'magit-status
+  
+  ;; Helm bindings
+  "hf" 'find-file
+  "hr" 'helm-recentf
+  "hb" 'switch-to-buffer
+  "x" 'helm-M-x
+  "hk" 'kill-buffer)
