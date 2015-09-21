@@ -11,6 +11,12 @@
                          ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")))
 (package-initialize)
 
+;; Configuration
+(setq inhibit-splash-screen t)
+(setq explicit-shell-file-name "C:/Program Files/cygwin64/bin/bash.exe")
+(setq shell-file-name explicit-shell-file-name)
+(add-to-list 'exec-path "C:/Program Files/cygwin64/bin")
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -98,7 +104,7 @@
 (evil-leader/set-leader ",") 
 (evil-leader/set-key
   ;; General
-  "q" 'evil-quit
+  "q" 'evil-quit-all
   
   ;; Window bindings
   "wv" 'evil-window-vsplit
@@ -121,5 +127,6 @@
   "hf" 'find-file
   "hr" 'helm-recentf
   "hb" 'switch-to-buffer
+  "hp" 'helm-show-kill-ring
   "x" 'helm-M-x
   "hk" 'kill-buffer)
