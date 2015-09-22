@@ -61,6 +61,7 @@
 
 (require 'powerline)
 (powerline-center-theme)
+(add-hook 'desktop-after-read-hook 'powerline-reset)
 
 ;; __________________
 ;; Avy Jump Configuration
@@ -104,7 +105,7 @@
 (evil-leader/set-leader ",") 
 (evil-leader/set-key
   ;; General
-  "q" 'evil-quit-all
+  "q" 'kill-emacs
   
   ;; Window bindings
   "wv" 'evil-window-vsplit
@@ -123,6 +124,14 @@
 
   ;;Magit bindings
   "gs" 'magit-status
+
+  ;; Markdown bindings
+  "mh" 'markdown-insert-header
+  "mta" 'markdown-insert-header-atx-1
+  "mts" 'markdown-insert-header-atx-2
+  "mtd" 'markdown-insert-header-atx-3
+  "mtf" 'markdown-insert-header-atx-4
+  "mtg" 'markdown-insert-header-atx-5
   
   ;; Helm bindings
   "hf" 'find-file
