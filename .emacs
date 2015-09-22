@@ -110,6 +110,7 @@
   "wv" 'evil-window-vsplit
   "ws" 'evil-window-split
   "wq" 'delete-window
+  "we" 'server-edit
 
   ;; Motions
   "j" 'evil-first-non-blank
