@@ -74,6 +74,13 @@
 (global-linum-mode)
 (require 'linum-relative)
 
+(require 'rect-mark)
+;; ________
+;; Org mode
+(setq org-log-done 'time)
+(setq org-todo-keywords
+       '((sequence "TODO" "INPROGRESS" "ONHOLD" "|" "DONE" "REJECT")))
+
 ;; _____________
 ;; Markdown Mode
 (autoload 'markdown-mode "markdown-mode"
@@ -112,10 +119,15 @@
   "ws" 'evil-window-split
   "wq" 'delete-window
   "we" 'server-edit
+  "wf" 'shrink-window-if-larger-than-buffer
 
   ;; Motions
   "j" 'evil-first-non-blank
   "k" 'evil-last-non-blank
+
+  ;; Whitespace Mode
+  "sm" 'whitespace-mode
+  "sc" 'whitespace-cleanup
   
   ;; Avy bindings
   "af" 'ace-window
