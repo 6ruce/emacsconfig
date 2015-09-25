@@ -1,14 +1,13 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")
-                        ("marmalade" . "http://marmalade-repo.org/packages/")
-                        ("melpa-stable" . "http://marmalade-repo.org/packages/")
-                         ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")))
+			 ("org" . "http://orgmode.org/elpa/")
+			("marmalade" . "http://marmalade-repo.org/packages/")
+			("melpa-stable" . "http://marmalade-repo.org/packages/")
+			 ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")))
 (package-initialize)
 
 ;; Configuration
@@ -80,7 +79,11 @@
 (setq org-log-done 'time)
 (setq org-todo-keywords
        '((sequence "TODO" "INPROGRESS" "ONHOLD" "|" "DONE" "REJECT")))
-
+(setq org-todo-keyword-faces
+      '(("TODO"       . (:foreground "DarkOrange1"  :weight bold))
+	("REJECT"     . (:foreground "forest green" :weight bold))
+        ("INPROGRESS" . (:foreground "sea green"))
+        ("ONHOLD"     . (:foreground "light sea green"))))
 ;; _____________
 ;; Markdown Mode
 (autoload 'markdown-mode "markdown-mode"
@@ -90,14 +93,24 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
 ;; Customizations
-(setq evil-emacs-state-cursor '("red" box))
-(setq evil-normal-state-cursor '("green" box))
-(setq evil-visual-state-cursor '("orange" box))
-(setq evil-insert-state-cursor '("red" bar))
-(setq evil-replace-state-cursor '("red" bar))
+(setq tab-width 4)
+(setq indent-tabs-mode nil)
+;; Align with spaces only
+(defadvice align-regexp (around align-regexp-with-spaces)
+  "Never use tabs for alignment."
+  (let ((indent-tabs-mode nil))
+    ad-do-it))
+(ad-activate 'align-regexp)
+
+(setq evil-emacs-state-cursor    '("red" box))
+(setq evil-normal-state-cursor   '("green" box))
+(setq evil-visual-state-cursor   '("orange" box))
+(setq evil-insert-state-cursor   '("red" bar))
+(setq evil-replace-state-cursor  '("red" bar))
 (setq evil-operator-state-cursor '("red" hollow))
 (when (fboundp 'winner-mode)
       (winner-mode 1))
+
 ;; _______________________
 ;; Evil Mode Configuration
 (require 'evil)
@@ -109,11 +122,11 @@
 (require 'evil-leader)
 (setq evil-leader/no-prefix-mode-rx '("magit-.*-mode" "gnus-.*-mode"))
 (global-evil-leader-mode)
-(evil-leader/set-leader ",") 
+(evil-leader/set-leader ",")
 (evil-leader/set-key
   ;; General
   "q" 'kill-emacs
-  
+
   ;; Window bindings
   "wv" 'evil-window-vsplit
   "ws" 'evil-window-split
@@ -128,7 +141,7 @@
   ;; Whitespace Mode
   "sm" 'whitespace-mode
   "sc" 'whitespace-cleanup
-  
+
   ;; Avy bindings
   "af" 'ace-window
   "aw" 'avy-goto-word-1
@@ -138,17 +151,17 @@
   "gs" 'magit-status
 
   ;; Markdown bindings
-  "mh" 'markdown-insert-header
+  "mh"  'markdown-insert-header
   "mta" 'markdown-insert-header-atx-1
   "mts" 'markdown-insert-header-atx-2
   "mtd" 'markdown-insert-header-atx-3
   "mtf" 'markdown-insert-header-atx-4
   "mtg" 'markdown-insert-header-atx-5
-  
+
   ;; Helm bindings
   "hf" 'find-file
   "hr" 'helm-recentf
   "hb" 'switch-to-buffer
   "hp" 'helm-show-kill-ring
-  "x" 'helm-M-x
+  "x"  'helm-M-x
   "hk" 'kill-buffer)
