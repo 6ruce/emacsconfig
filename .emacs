@@ -125,7 +125,8 @@
 (evil-leader/set-leader ",")
 (evil-leader/set-key
   ;; General
-  "q" 'kill-emacs
+  "q" 'save-buffers-kill-emacs
+  ";" 'save-buffer
 
   ;; Window bindings
   "wv" 'evil-window-vsplit
@@ -133,6 +134,8 @@
   "wq" 'delete-window
   "we" 'server-edit
   "wf" 'shrink-window-if-larger-than-buffer
+  "wp" 'evil-prev-buffer
+  "wu" 'winner-undo
 
   ;; Motions
   "j" 'evil-first-non-blank
@@ -146,6 +149,7 @@
   "af" 'ace-window
   "aw" 'avy-goto-word-1
   "al" 'avy-goto-line
+  "ac" 'avy-goto-char
 
   ;;Magit bindings
   "gs" 'magit-status
