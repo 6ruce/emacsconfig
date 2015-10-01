@@ -26,15 +26,38 @@
    (quote
     ("c1390663960169cd92f58aad44ba3253227d8f715c026438303c09b9fb66cdfb" "ad950f1b1bf65682e390f3547d479fd35d8c66cafa2b8aa28179d78122faa947" "3b24f986084001ae46aa29ca791d2bc7f005c5c939646d2b800143526ab4d323" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" "82d2cac368ccdec2fcc7573f24c3f79654b78bf133096f9b40c20d97ec1d8016" "bb08c73af94ee74453c90422485b29e5643b73b05e8de029a6909af6a3fb3f58" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" default)))
  '(display-time-mode t)
+ '(fci-rule-color "#f1c40f")
  '(fringe-mode (quote (0)) nil (fringe))
+ '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
+ '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
  '(package-selected-packages
    (quote
-    (theme-changer ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
+    (helm-projectile flymake-haskell-multi flycheck-ghcmod ac-haskell-process theme-changer ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
  '(save-place-mode t nil (saveplace))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(size-indication-mode t)
- '(tool-bar-mode nil))
+ '(sml/active-background-color "#34495e")
+ '(sml/active-foreground-color "#ecf0f1")
+ '(sml/inactive-background-color "#dfe4ea")
+ '(sml/inactive-foreground-color "#34495e")
+ '(tool-bar-mode nil)
+ '(vc-annotate-background "#ecf0f1")
+ '(vc-annotate-color-map
+   (quote
+    ((30 . "#e74c3c")
+     (60 . "#c0392b")
+     (90 . "#e67e22")
+     (120 . "#d35400")
+     (150 . "#f1c40f")
+     (180 . "#d98c10")
+     (210 . "#2ecc71")
+     (240 . "#27ae60")
+     (270 . "#1abc9c")
+     (300 . "#16a085")
+     (330 . "#2492db")
+     (360 . "#0a74b9"))))
+ '(vc-annotate-very-old-color "#0a74b9"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -54,6 +77,8 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
 (helm-autoresize-mode 1)
+
+(projectile-global-mode)
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -162,10 +187,12 @@
   "mtf" 'markdown-insert-header-atx-4
   "mtg" 'markdown-insert-header-atx-5
 
+  ;; Haskell
+
   ;; Helm bindings
   "hf" 'find-file
   "hr" 'helm-recentf
-  "hb" 'switch-to-buffer
+  "hb" 'helm-buffers-list
   "hp" 'helm-show-kill-ring
   "x"  'helm-M-x
   "hk" 'kill-buffer)
@@ -178,3 +205,10 @@
 (setq calendar-longitude 30.31)
 (require 'theme-changer)
 (change-theme 'flatui 'ample-flat)
+
+(require 'haskell-interactive-mode)
+(require 'haskell-process)
+(eval-after-load 'flycheck '(require 'flycheck-ghcmod))
+(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(custom-set-variables '(haskell-process-type 'stack-ghci))
