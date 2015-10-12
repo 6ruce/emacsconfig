@@ -12,8 +12,6 @@
 
 ;; Configuration
 (setq inhibit-splash-screen t)
-(setq explicit-shell-file-name "C:/Program Files/cygwin64/bin/bash.exe")
-(setq shell-file-name explicit-shell-file-name)
 (add-to-list 'exec-path "C:/Program Files/cygwin64/bin")
 
 (custom-set-variables
@@ -117,6 +115,22 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
+
+;; Folding
+(require 'hideshow)
+(require 'sgml-mode)
+(require 'nxml-mode)
+
+(add-to-list 'hs-special-modes-alist
+             '(nxml-mode
+               "<!--\\|<[^/>]*[^/]>"
+               "-->\\|</[^/>]*[^/]>"
+
+               "<!--"
+               sgml-skip-tag-forward
+               nil))
+(add-hook 'nxml-mode-hook 'hs-minor-mode)
+
 ;; Customizations
 (setq tab-width 4)
 (setq indent-tabs-mode nil)
@@ -152,6 +166,7 @@
   ;; General
   "q" 'save-buffers-kill-emacs
   ";" 'save-buffer
+  "f" 'hs-toggle-hiding 
 
   ;; Window bindings
   "wv" 'evil-window-vsplit
@@ -170,6 +185,10 @@
   "sm" 'whitespace-mode
   "sc" 'whitespace-cleanup
 
+  ;; Multiple cursors
+  "cj" 'evil-mc-make-and-goto-next-match
+  "cs" 'evil-mc-skip-and-goto-next-match
+
   ;; Avy bindings
   "af" 'ace-window
   "aw" 'avy-goto-word-1
@@ -186,6 +205,7 @@
   "mtd" 'markdown-insert-header-atx-3
   "mtf" 'markdown-insert-header-atx-4
   "mtg" 'markdown-insert-header-atx-5
+  "mb" 'markdown-insert-bold
 
   ;; Haskell
 
@@ -206,9 +226,13 @@
 (require 'theme-changer)
 (change-theme 'flatui 'ample-flat)
 
+(require 'evil-mc)
+(global-evil-mc-mode  1) 
+
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
 (eval-after-load 'flycheck '(require 'flycheck-ghcmod))
 (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (custom-set-variables '(haskell-process-type 'stack-ghci))
+
