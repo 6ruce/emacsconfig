@@ -28,11 +28,15 @@
  '(display-time-mode t)
  '(fci-rule-color "#f1c40f")
  '(fringe-mode (quote (0)) nil (fringe))
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-log t)
+ '(haskell-process-suggest-remove-import-lines t)
+ '(haskell-process-type (quote stack-ghci))
  '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
  '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
  '(package-selected-packages
    (quote
-    (helm-projectile flymake-haskell-multi flycheck-ghcmod ac-haskell-process theme-changer ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
+    (helm-swoop grizzl company-quickhelp flycheck-haskell company-ghci helm-projectile ac-haskell-process theme-changer ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
  '(save-place-mode t nil (saveplace))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -77,6 +81,21 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
 (helm-autoresize-mode 1)
+
+(require 'helm-swoop)
+;; From helm-swoop to helm-multi-swoop-all
+(global-set-key (kbd "M-i") 'helm-swoop-from-evil-search)
+;; Instead of helm-multi-swoop-all, you can also use helm-multi-swoop-current-mode
+(define-key helm-swoop-map (kbd "M-m") 'helm-multi-swoop-current-mode-from-helm-swoop)
+;; Move up and down like isearch
+(define-key helm-swoop-map (kbd "C-k") 'helm-previous-line)
+(define-key helm-swoop-map (kbd "C-j") 'helm-next-line)
+(define-key helm-multi-swoop-map (kbd "C-k") 'helm-previous-line)
+(define-key helm-multi-swoop-map (kbd "C-j") 'helm-next-line)
+(setq helm-multi-swoop-edit-save t)
+(setq helm-swoop-split-with-multiple-windows t)
+(setq helm-swoop-split-direction 'split-window-vertically)
+(setq helm-swoop-use-line-number-face t)
 
 (projectile-global-mode)
 
@@ -166,6 +185,10 @@
   "j" 'evil-first-non-blank
   "k" 'evil-last-non-blank
 
+  ;; Helm Swoop
+  "hv" 'helm-swoop
+  "hs" 'helm-swoop-from-evil-search
+
   ;; Whitespace Mode
   "sm" 'whitespace-mode
   "sc" 'whitespace-cleanup
@@ -188,6 +211,9 @@
   "mtg" 'markdown-insert-header-atx-5
 
   ;; Haskell
+  ;; Projectile
+  "pf" 'projectile-find-file
+  "ps" 'projectile-switch-project
 
   ;; Helm bindings
   "hf" 'find-file
@@ -206,9 +232,28 @@
 (require 'theme-changer)
 (change-theme 'flatui 'ample-flat)
 
-(require 'haskell-interactive-mode)
-(require 'haskell-process)
-(eval-after-load 'flycheck '(require 'flycheck-ghcmod))
+;; Haskell
+(company-quickhelp-mode 1)
+(require 'haskell-mode)
+(define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+(add-hook 'haskell-mode-hook 'haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(custom-set-variables '(haskell-process-type 'stack-ghci))
+(add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
+(setq haskell-process-type 'stack-ghci)
+(setq haskell-process-path-ghci "stack")
+(setq haskell-process-args-ghci "ghci")
+
+
+(require 'flycheck)
+(require 'flycheck-haskell)
+(add-hook 'haskell-mode-hook 'flycheck-mode)
+(add-hook 'flycheck-mode-hook 'flycheck-haskell-configure)
+
+(require 'company)
+(require 'company-ghci)
+(push 'company-ghci company-backends)
+(add-hook 'haskell-mode-hook 'company-mode)
+
+(provide '.emacs)
+;;; .emacs ends here
