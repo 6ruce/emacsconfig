@@ -13,6 +13,7 @@
 ;; Configuration
 (setq inhibit-splash-screen t)
 (add-to-list 'exec-path "C:/Program Files/cygwin64/bin")
+(add-to-list 'exec-path "c:/Program Files/OmniSharp/omnisharp-server/OmniSharp/bin/Debug/")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -26,11 +27,13 @@
  '(display-time-mode t)
  '(fci-rule-color "#f1c40f")
  '(fringe-mode (quote (0)) nil (fringe))
+ '(haskell-process-type (quote stack-ghci))
  '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
  '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
  '(package-selected-packages
    (quote
     (helm-projectile flymake-haskell-multi flycheck-ghcmod ac-haskell-process theme-changer ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
+ '(require-final-newline nil)
  '(save-place-mode t nil (saveplace))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -61,7 +64,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Literation Mono Powerline" :foundry "outline" :slant normal :weight normal :height 113 :width normal)))))
+ '(default ((t (:family "Literation Mono Powerline" :foundry "outline" :slant normal :weight normal :height 98 :width normal)))))
 
 ;; ___________________
 ;; Magit Configuration
@@ -77,6 +80,8 @@
 (helm-autoresize-mode 1)
 
 (projectile-global-mode)
+(require 'helm-projectile)
+(helm-projectile-on)
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -91,12 +96,21 @@
 (require 'avy)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 
-;; _____________________________
-;; Relative number configuration
-(global-linum-mode)
-(require 'linum-relative)
+;; Theme changer
+(load-theme 'ample t t)
+(load-theme 'ample-flat t t)
 
-(require 'rect-mark)
+(setq calendar-location-name "Kyiv, UA")
+(setq calendar-latitude 50.26)
+(setq calendar-longitude 30.31)
+(require 'theme-changer)
+(change-theme 'flatui 'ample-flat)
+
+
+;; _____________________________
+;; Number configuration
+(global-linum-mode)
+
 ;; ________
 ;; Org mode
 (setq org-log-done 'time)
@@ -130,6 +144,7 @@
                sgml-skip-tag-forward
                nil))
 (add-hook 'nxml-mode-hook 'hs-minor-mode)
+(vimish-fold-global-mode 1)
 
 ;; Customizations
 (setq tab-width 4)
@@ -140,6 +155,7 @@
   (let ((indent-tabs-mode nil))
     ad-do-it))
 (ad-activate 'align-regexp)
+(electric-pair-mode t)
 
 (setq evil-emacs-state-cursor    '("red" box))
 (setq evil-normal-state-cursor   '("green" box))
@@ -217,22 +233,63 @@
   "x"  'helm-M-x
   "hk" 'kill-buffer)
 
-(load-theme 'ample t t)
-(load-theme 'ample-flat t t)
-
-(setq calendar-location-name "Kyiv, UA")
-(setq calendar-latitude 50.26)
-(setq calendar-longitude 30.31)
-(require 'theme-changer)
-(change-theme 'flatui 'ample-flat)
-
+;; Evil Multiple Cursors
 (require 'evil-mc)
 (global-evil-mc-mode  1) 
 
-(require 'haskell-interactive-mode)
-(require 'haskell-process)
-(eval-after-load 'flycheck '(require 'flycheck-ghcmod))
-(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(custom-set-variables '(haskell-process-type 'stack-ghci))
+;; _______
+;; C# Mode
+(require 'omnisharp)
+(add-hook 'csharp-mode-hook 'omnisharp-mode)
+(add-hook 'csharp-mode-hook 'flycheck-mode)
+(evil-define-key 'insert omnisharp-mode-map (kbd "M-.") 'omnisharp-auto-complete)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g d") 'omnisharp-go-to-definition)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g u") 'omnisharp-helm-find-usages)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g I") 'omnisharp-find-implementations) ; g i is taken
+(evil-define-key 'normal omnisharp-mode-map (kbd "g c") 'omnisharp-run-code-action-refactoring)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g f") 'omnisharp-fix-code-issue-at-point)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g F") 'omnisharp-fix-usings)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g R") 'omnisharp-rename)
+(evil-define-key 'normal omnisharp-mode-map (kbd ", i") 'omnisharp-current-type-information)
+(evil-define-key 'normal omnisharp-mode-map (kbd ", I") 'omnisharp-current-type-documentation)
+;;(evil-define-key 'insert omnisharp-mode-map (kbd ".") 'omnisharp-add-dot-and-auto-complete)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g t") 'omnisharp-navigate-to-current-file-member)
+(evil-define-key 'normal omnisharp-mode-map (kbd "g T") 'omnisharp-navigate-to-solution-member)
+(evil-define-key 'normal omnisharp-mode-map (kbd ", n f") 'omnisharp-navigate-to-solution-file-then-file-member)
+(evil-define-key 'normal omnisharp-mode-map (kbd ", n F") 'omnisharp-navigate-to-solution-file)
+(evil-define-key 'normal omnisharp-mode-map (kbd ", n r") 'omnisharp-navigate-to-region)
+(evil-define-key 'normal omnisharp-mode-map (kbd "<f12>") 'omnisharp-show-last-auto-complete-result)
+(evil-define-key 'insert omnisharp-mode-map (kbd "<f12>") 'omnisharp-show-last-auto-complete-result)
+(evil-define-key 'normal omnisharp-mode-map (kbd ",.") 'omnisharp-show-overloads-at-point)
+(evil-define-key 'normal omnisharp-mode-map (kbd ",rl") 'recompile)
 
+(evil-define-key 'normal omnisharp-mode-map (kbd ",rt")
+  (lambda() (interactive) (omnisharp-unit-test "single")))
+
+(evil-define-key 'normal omnisharp-mode-map
+  (kbd ",rf")
+  (lambda() (interactive) (omnisharp-unit-test "fixture")))
+
+(evil-define-key 'normal omnisharp-mode-map
+  (kbd ",ra")
+  (lambda() (interactive) (omnisharp-unit-test "all")))
+
+(require 'company)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp))
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; 120 Symbols ruler
+(custom-set-faces
+   '(my-long-line-face ((((class color)) (:background "firebrick"))) t))
+
+(add-hook 'font-lock-mode-hook
+            (function
+             (lambda ()
+               (setq font-lock-keywords
+                     (append font-lock-keywords
+                             '(("^.\\{121,\\}$" (0 'my-long-line-face t))))))))
+
+;; Evil MathcIt Mode
+(require 'evil-matchit)
+(global-evil-matchit-mode 1)
