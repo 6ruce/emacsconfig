@@ -191,6 +191,7 @@
   "we" 'server-edit
   "wf" 'shrink-window-if-larger-than-buffer
   "wp" 'evil-prev-buffer
+  "wn" 'evil-next-buffer
   "wu" 'winner-undo
 
   ;; Motions
@@ -230,6 +231,7 @@
   "hr" 'helm-recentf
   "hb" 'helm-buffers-list
   "hp" 'helm-show-kill-ring
+  "hj" 'helm-projectile
   "x"  'helm-M-x
   "hk" 'kill-buffer)
 
@@ -278,17 +280,6 @@
 (eval-after-load 'company
   '(add-to-list 'company-backends 'company-omnisharp))
 (add-hook 'after-init-hook 'global-company-mode)
-
-;; 120 Symbols ruler
-(custom-set-faces
-   '(my-long-line-face ((((class color)) (:background "firebrick"))) t))
-
-(add-hook 'font-lock-mode-hook
-            (function
-             (lambda ()
-               (setq font-lock-keywords
-                     (append font-lock-keywords
-                             '(("^.\\{121,\\}$" (0 'my-long-line-face t))))))))
 
 ;; Evil MathcIt Mode
 (require 'evil-matchit)
