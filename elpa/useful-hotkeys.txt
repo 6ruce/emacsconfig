@@ -1,2 +1,0 @@
-=== ENCODINGS ===
-You can change the encoding to use for the file when saving using .

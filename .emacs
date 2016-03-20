@@ -1,4 +1,4 @@
-;; Added by Package.el.  This must come before configurations of
+﻿;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
@@ -10,10 +10,36 @@
 			 ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")))
 (package-initialize)
 
+;; Automatic package loading
+(defun ensure-package-installed (&rest packages)
+  "Assure every package is installed, ask for installation if it’s not.
+
+Return a list of installed packages or nil for every skipped package."
+  (mapcar
+   (lambda (package)
+     (if (package-installed-p package)
+         nil
+       (if (y-or-n-p (format "Package %s is missing. Install it? " package))
+           (package-install package)
+         package)))
+   packages))
+
+;; Make sure to have downloaded archive description.
+(or (file-exists-p package-user-dir)
+    (package-refresh-contents))
+
+;; Activate installed packages
+(package-initialize)
+
+;; Assuming you wish to install "iedit" and "magit"
+(ensure-package-installed 'helm-projectile 'flymake-haskell-multi 'flycheck-ghcmod 'ac-haskell-process 
+			  'theme-changer 'ace-window 'magit 'ample-theme 'rainbow-delimiters 'helm 'projectile 
+			  'evil-surround 'evil-leader 'linum-relative 'evil 'evil-mc 'evil-matchit 'powerline
+			  'company)
+
 ;; Configuration
 (setq inhibit-splash-screen t)
 (add-to-list 'exec-path "C:/Program Files/cygwin64/bin")
-(add-to-list 'exec-path "c:/Program Files/OmniSharp/omnisharp-server/OmniSharp/bin/Debug/")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -144,7 +170,6 @@
                sgml-skip-tag-forward
                nil))
 (add-hook 'nxml-mode-hook 'hs-minor-mode)
-(vimish-fold-global-mode 1)
 
 ;; Customizations
 (setq tab-width 4)
@@ -238,43 +263,6 @@
 ;; Evil Multiple Cursors
 (require 'evil-mc)
 (global-evil-mc-mode  1) 
-
-;; _______
-;; C# Mode
-(require 'omnisharp)
-(add-hook 'csharp-mode-hook 'omnisharp-mode)
-(add-hook 'csharp-mode-hook 'flycheck-mode)
-(evil-define-key 'insert omnisharp-mode-map (kbd "M-.") 'omnisharp-auto-complete)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g d") 'omnisharp-go-to-definition)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g u") 'omnisharp-helm-find-usages)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g I") 'omnisharp-find-implementations) ; g i is taken
-(evil-define-key 'normal omnisharp-mode-map (kbd "g c") 'omnisharp-run-code-action-refactoring)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g f") 'omnisharp-fix-code-issue-at-point)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g F") 'omnisharp-fix-usings)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g R") 'omnisharp-rename)
-(evil-define-key 'normal omnisharp-mode-map (kbd ", i") 'omnisharp-current-type-information)
-(evil-define-key 'normal omnisharp-mode-map (kbd ", I") 'omnisharp-current-type-documentation)
-;;(evil-define-key 'insert omnisharp-mode-map (kbd ".") 'omnisharp-add-dot-and-auto-complete)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g t") 'omnisharp-navigate-to-current-file-member)
-(evil-define-key 'normal omnisharp-mode-map (kbd "g T") 'omnisharp-navigate-to-solution-member)
-(evil-define-key 'normal omnisharp-mode-map (kbd ", n f") 'omnisharp-navigate-to-solution-file-then-file-member)
-(evil-define-key 'normal omnisharp-mode-map (kbd ", n F") 'omnisharp-navigate-to-solution-file)
-(evil-define-key 'normal omnisharp-mode-map (kbd ", n r") 'omnisharp-navigate-to-region)
-(evil-define-key 'normal omnisharp-mode-map (kbd "<f12>") 'omnisharp-show-last-auto-complete-result)
-(evil-define-key 'insert omnisharp-mode-map (kbd "<f12>") 'omnisharp-show-last-auto-complete-result)
-(evil-define-key 'normal omnisharp-mode-map (kbd ",.") 'omnisharp-show-overloads-at-point)
-(evil-define-key 'normal omnisharp-mode-map (kbd ",rl") 'recompile)
-
-(evil-define-key 'normal omnisharp-mode-map (kbd ",rt")
-  (lambda() (interactive) (omnisharp-unit-test "single")))
-
-(evil-define-key 'normal omnisharp-mode-map
-  (kbd ",rf")
-  (lambda() (interactive) (omnisharp-unit-test "fixture")))
-
-(evil-define-key 'normal omnisharp-mode-map
-  (kbd ",ra")
-  (lambda() (interactive) (omnisharp-unit-test "all")))
 
 (require 'company)
 (eval-after-load 'company
