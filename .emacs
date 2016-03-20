@@ -1,4 +1,4 @@
-;; Added by Package.el.  This must come before configurations of
+﻿;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
@@ -10,10 +10,36 @@
 			 ("melpa-stable" . "http://melpa-stable.milkbox.net/packages/")))
 (package-initialize)
 
+;; Automatic package loading
+(defun ensure-package-installed (&rest packages)
+  "Assure every package is installed, ask for installation if it’s not.
+
+Return a list of installed packages or nil for every skipped package."
+  (mapcar
+   (lambda (package)
+     (if (package-installed-p package)
+         nil
+       (if (y-or-n-p (format "Package %s is missing. Install it? " package))
+           (package-install package)
+         package)))
+   packages))
+
+;; Make sure to have downloaded archive description.
+(or (file-exists-p package-user-dir)
+    (package-refresh-contents))
+
+;; Activate installed packages
+(package-initialize)
+
+;; Assuming you wish to install "iedit" and "magit"
+(ensure-package-installed 'org
+			  'helm-projectile 'flymake-haskell-multi 'flycheck-ghcmod 'ac-haskell-process 
+			  'theme-changer 'ace-window 'magit 'ample-theme 'rainbow-delimiters 'helm 'projectile 
+			  'evil-surround 'evil-leader 'linum-relative 'evil 'evil-mc 'evil-matchit 'powerline
+			  'company)
+
 ;; Configuration
 (setq inhibit-splash-screen t)
-(setq explicit-shell-file-name "C:/Program Files/cygwin64/bin/bash.exe")
-(setq shell-file-name explicit-shell-file-name)
 (add-to-list 'exec-path "C:/Program Files/cygwin64/bin")
 
 (custom-set-variables
@@ -28,15 +54,13 @@
  '(display-time-mode t)
  '(fci-rule-color "#f1c40f")
  '(fringe-mode (quote (0)) nil (fringe))
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-log t)
- '(haskell-process-suggest-remove-import-lines t)
  '(haskell-process-type (quote stack-ghci))
  '(hl-paren-background-colors (quote ("#2492db" "#95a5a6" nil)))
  '(hl-paren-colors (quote ("#ecf0f1" "#ecf0f1" "#c0392b")))
  '(package-selected-packages
    (quote
-    (helm-swoop grizzl company-quickhelp flycheck-haskell company-ghci helm-projectile ac-haskell-process theme-changer ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
+    (helm-projectile flymake-haskell-multi flycheck-ghcmod ac-haskell-process theme-changer ace-window magit ample-theme rainbow-delimiters helm projectile evil-surround linum-relative evil)))
+ '(require-final-newline nil)
  '(save-place-mode t nil (saveplace))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
@@ -67,7 +91,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Literation Mono Powerline" :foundry "outline" :slant normal :weight normal :height 113 :width normal)))))
+ '(default ((t (:family "Literation Mono Powerline" :foundry "outline" :slant normal :weight normal :height 98 :width normal)))))
 
 ;; ___________________
 ;; Magit Configuration
@@ -82,22 +106,9 @@
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
 (helm-autoresize-mode 1)
 
-(require 'helm-swoop)
-;; From helm-swoop to helm-multi-swoop-all
-(global-set-key (kbd "M-i") 'helm-swoop-from-evil-search)
-;; Instead of helm-multi-swoop-all, you can also use helm-multi-swoop-current-mode
-(define-key helm-swoop-map (kbd "M-m") 'helm-multi-swoop-current-mode-from-helm-swoop)
-;; Move up and down like isearch
-(define-key helm-swoop-map (kbd "C-k") 'helm-previous-line)
-(define-key helm-swoop-map (kbd "C-j") 'helm-next-line)
-(define-key helm-multi-swoop-map (kbd "C-k") 'helm-previous-line)
-(define-key helm-multi-swoop-map (kbd "C-j") 'helm-next-line)
-(setq helm-multi-swoop-edit-save t)
-(setq helm-swoop-split-with-multiple-windows t)
-(setq helm-swoop-split-direction 'split-window-vertically)
-(setq helm-swoop-use-line-number-face t)
-
 (projectile-global-mode)
+(require 'helm-projectile)
+(helm-projectile-on)
 
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
@@ -112,12 +123,21 @@
 (require 'avy)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 
-;; _____________________________
-;; Relative number configuration
-(global-linum-mode)
-(require 'linum-relative)
+;; Theme changer
+(load-theme 'ample t t)
+(load-theme 'ample-flat t t)
 
-(require 'rect-mark)
+(setq calendar-location-name "Kyiv, UA")
+(setq calendar-latitude 50.26)
+(setq calendar-longitude 30.31)
+(require 'theme-changer)
+(change-theme 'flatui 'ample-flat)
+
+
+;; _____________________________
+;; Number configuration
+(global-linum-mode)
+
 ;; ________
 ;; Org mode
 (setq org-log-done 'time)
@@ -136,6 +156,22 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
+
+;; Folding
+(require 'hideshow)
+(require 'sgml-mode)
+(require 'nxml-mode)
+
+(add-to-list 'hs-special-modes-alist
+             '(nxml-mode
+               "<!--\\|<[^/>]*[^/]>"
+               "-->\\|</[^/>]*[^/]>"
+
+               "<!--"
+               sgml-skip-tag-forward
+               nil))
+(add-hook 'nxml-mode-hook 'hs-minor-mode)
+
 ;; Customizations
 (setq tab-width 4)
 (setq indent-tabs-mode nil)
@@ -145,6 +181,7 @@
   (let ((indent-tabs-mode nil))
     ad-do-it))
 (ad-activate 'align-regexp)
+(electric-pair-mode t)
 
 (setq evil-emacs-state-cursor    '("red" box))
 (setq evil-normal-state-cursor   '("green" box))
@@ -171,6 +208,7 @@
   ;; General
   "q" 'save-buffers-kill-emacs
   ";" 'save-buffer
+  "f" 'hs-toggle-hiding 
 
   ;; Window bindings
   "wv" 'evil-window-vsplit
@@ -179,19 +217,20 @@
   "we" 'server-edit
   "wf" 'shrink-window-if-larger-than-buffer
   "wp" 'evil-prev-buffer
+  "wn" 'evil-next-buffer
   "wu" 'winner-undo
 
   ;; Motions
   "j" 'evil-first-non-blank
   "k" 'evil-last-non-blank
 
-  ;; Helm Swoop
-  "hv" 'helm-swoop
-  "hs" 'helm-swoop-from-evil-search
-
   ;; Whitespace Mode
   "sm" 'whitespace-mode
   "sc" 'whitespace-cleanup
+
+  ;; Multiple cursors
+  "cj" 'evil-mc-make-and-goto-next-match
+  "cs" 'evil-mc-skip-and-goto-next-match
 
   ;; Avy bindings
   "af" 'ace-window
@@ -209,51 +248,28 @@
   "mtd" 'markdown-insert-header-atx-3
   "mtf" 'markdown-insert-header-atx-4
   "mtg" 'markdown-insert-header-atx-5
+  "mb" 'markdown-insert-bold
 
   ;; Haskell
-  ;; Projectile
-  "pf" 'projectile-find-file
-  "ps" 'projectile-switch-project
 
   ;; Helm bindings
   "hf" 'find-file
   "hr" 'helm-recentf
   "hb" 'helm-buffers-list
   "hp" 'helm-show-kill-ring
+  "hj" 'helm-projectile
   "x"  'helm-M-x
   "hk" 'kill-buffer)
 
-(load-theme 'ample t t)
-(load-theme 'ample-flat t t)
-
-(setq calendar-location-name "Kyiv, UA")
-(setq calendar-latitude 50.26)
-(setq calendar-longitude 30.31)
-(require 'theme-changer)
-(change-theme 'flatui 'ample-flat)
-
-;; Haskell
-(company-quickhelp-mode 1)
-(require 'haskell-mode)
-(define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
-(add-hook 'haskell-mode-hook 'haskell-doc-mode)
-(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(add-hook 'haskell-mode-hook 'haskell-decl-scan-mode)
-(setq haskell-process-type 'stack-ghci)
-(setq haskell-process-path-ghci "stack")
-(setq haskell-process-args-ghci "ghci")
-
-
-(require 'flycheck)
-(require 'flycheck-haskell)
-(add-hook 'haskell-mode-hook 'flycheck-mode)
-(add-hook 'flycheck-mode-hook 'flycheck-haskell-configure)
+;; Evil Multiple Cursors
+(require 'evil-mc)
+(global-evil-mc-mode  1) 
 
 (require 'company)
-(require 'company-ghci)
-(push 'company-ghci company-backends)
-(add-hook 'haskell-mode-hook 'company-mode)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-omnisharp))
+(add-hook 'after-init-hook 'global-company-mode)
 
-(provide '.emacs)
-;;; .emacs ends here
+;; Evil MathcIt Mode
+(require 'evil-matchit)
+(global-evil-matchit-mode 1)
